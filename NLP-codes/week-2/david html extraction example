@@ -1,0 +1,12 @@
+import extraction
+import requests
+
+url = "http://edition.cnn.com/2016/07/10/football/france-portugal-euro-2016-final/"
+html = requests.get(url).text
+extracted = extraction.Extractor().extract(html, source_url=url)
+extracted.title
+print extracted.title
+print extracted.description
+print extracted.image
+print extracted.url
+
