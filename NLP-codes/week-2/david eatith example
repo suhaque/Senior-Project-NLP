@@ -1,0 +1,15 @@
+import eatiht.v2 as v2
+
+url = "http://edition.cnn.com/2016/07/10/football/france-portugal-euro-2016-final/"
+
+
+results = v2.extract_more(url)
+
+results[0]      # extracted text
+results[1]      # frequency distribution (histogram)
+results[2]      # subtrees (list of textnodes pre-filter)
+results[3]      # pruned subtrees
+results[4]      # list of paragraphs (as seperated in original website)
+
+print results[4]
+
