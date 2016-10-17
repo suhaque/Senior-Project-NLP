@@ -1,1 +1,110 @@
 
+
+# coding: utf-8
+
+# In[1]:
+
+import nltk
+import random
+from nltk.corpus import movie_reviews
+
+
+# In[2]:
+
+# #empty documents
+# documents = []
+
+# # #list of tuples
+# # #category of movie reviews [1]
+# # #fileid within the movie_reviews [2]
+# # #append the tuple category within fileid within movie_reviews [3]
+
+# # for category in movie_reviews.categories():   
+# #     for fileid in movie_reviews.fileids(category):  
+# #         documents.append(list(movie_reviews.words(fileid)),category)
+
+#used for create training and testing set
+#one liner for the above code
+documents = [(list(movie_reviews.words(fileid)),category)
+            for category in movie_reviews.categories()
+            for fileid in movie_reviews.fileids(category)]
+
+
+# In[3]:
+
+#shuffle documents
+random.shuffle(documents)
+
+
+# In[4]:
+
+#empty list
+all_words=[]
+
+#all the words to the all_words list, used for compiling list
+for w in movie_reviews.words():
+    all_words.append(w.lower())
+
+
+# In[5]:
+
+#Frequency distribution of the all_words list
+all_words=nltk.FreqDist(all_words)
+
+
+# In[6]:
+
+#print 15 most common words
+print(all_words.most_common(15))
+
+
+# In[7]:
+
+print(all_words["stupid"])
+
+
+# In[8]:
+
+#features
+word_features = list(all_words.keys())[:3000]
+
+
+# In[9]:
+
+def find_features(document):
+    words = set(document) #all words included in set of words
+    features = {} #empty dictionary
+    for w in word_features:
+        features[w] = (w in words) #w in words create boolean value
+        
+    return features
+
+
+# In[10]:
+
+#print((find_features(movie_reviews.words('neg/cv000_29416.txt'))))
+
+
+# In[11]:
+
+#converting the data(documents), each data is gonna be a review of the words, and the featuresets is gonna convert the reviews to find features so that it is contained in the movie_reviews
+featuresets = [(find_features(rev), category) for (rev,category) in documents]
+
+
+# In[12]:
+
+#naive bayes algorithm
+training_set = featuresets[:1900]
+testing_set = featuresets[1900:]
+
+#posterior = prior occurences x likelihood / evidence
+
+classifier = nltk.NaiveBayesClassifier.train(training_set)
+print("Naive Bayes Algo accuracy percent:",(nltk.classify.accuracy(classifier, testing_set))*100)
+classifier.show_most_informative_features(15)
+
+
+# In[ ]:
+
+
+
